@@ -1,115 +1,131 @@
 # reddit shell
 
-reddit shell is a web based linux shell emulator written in JavaScript that lets you browse and interact with reddit via command line https://redditshell.com/
+reddit shell lets you browse and interact with Reddit via a command-line interface.
+
+Available in two flavors:
+
+- **Web app** — browser-based terminal emulator at https://redditshell.com/
+- **CLI** — native Node.js terminal app (run locally, no browser needed)
+
+---
+
+## CLI
+
+### Requirements
+
+- Node.js 18+
+- A Reddit account
+- A Reddit API app (free, takes 2 minutes)
+
+### Setup
+
+```bash
+cd cli
+npm install
+node bin/rshell
+```
+
+Or install globally:
+
+```bash
+cd cli
+npm install -g .
+rshell
+```
+
+### First-time authentication
+
+Reddit requires OAuth even for reading public content. Before browsing, run `login`:
+
+1. Go to [reddit.com/prefs/apps](https://www.reddit.com/prefs/apps)
+2. Accept the [Responsible Builder Policy](https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy)
+3. Click **create app** → choose **installed app**
+4. Set redirect URI to `http://localhost:7474/callback`
+5. Copy the client ID (short string shown under the app name)
+6. In rshell, type `login` and paste your client ID when prompted
+
+Your token is saved to `~/.rshell/config.json` and restored automatically on next run.
+
+---
+
+## Commands
+
+### Navigation
+
+| Command | Description |
+|---------|-------------|
+| `list` | Frontpage posts |
+| `list [subreddit]` | Posts from a subreddit |
+| `list [subreddit] [sort]` | Sort: `new` `rising` `top` `controversial` |
+| `list subreddits` | Browse all subreddits |
+| `list next` / `list previous` | Paginate results |
+| `ls` / `cd [subreddit]` | Aliases for list |
+| `cd ..` / `cd -` | Go back to previous view |
+
+### Content
+
+| Command | Description |
+|---------|-------------|
+| `view comments [index]` | Open comment thread for a post |
+| `view comments [index] [sort]` | Sort: `confidence` `top` `new` `hot` `qa` |
+| `view more comments` | Load hidden comments |
+| `view more comments [index]` | Drill into a comment's replies |
+| `view content [index]` | Open post URL in your browser |
+| `watch [subreddit]` | Stream new posts live (polls every 15s) |
+| `search [term]` | Search Reddit |
+| `search next` / `search previous` | Paginate search results |
+| `user [username]` | View a user's posts and comments |
+| `user [username] next` | Paginate user overview |
+
+### Interaction *(requires login)*
+
+| Command | Description |
+|---------|-------------|
+| `upvote [index]` | Upvote a post or comment |
+| `downvote [index]` | Downvote a post or comment |
+| `post comment [text]` | Comment on the current post |
+| `post reply [index] [text]` | Reply to a specific comment |
+
+### Auth & settings
+
+| Command | Description |
+|---------|-------------|
+| `login` | Authenticate via Reddit OAuth2 |
+| `logout` | Clear your session |
+| `settings images [on\|off]` | Toggle inline image URLs |
+| `settings limit [auto\|1-100]` | Results per page |
+
+### Misc
+
+`pwd`  `clear`  `about`  `help`
+
+---
+
+## Web app
+
+The original browser-based version — no setup needed, open in any browser.
 
 **Features**
 
-* Browse public subreddits, posts, comments, and users.
-* Iterate through comment chains and post indexes.
-* Watch subreddits for new posts
-* Scope-based tabbed auto-completion of commands, subreddit names, and usernames (double tab for list view)
-* Search for posts, comments, and users.
-* Login authentication via OAuth 2
-* Upvote/downvote posts and comments
-* Comment/reply posts and comments
-* Display inline images for image posts `# set img on`
-* Change limit on number of retrieved posts, comments `# set limit [auto|1-100]`
-* Command format exceptions that cover most preferences
-
-**Future TO-DO**
-
-* more logged in user actions
-* multireddit views
-
-**Example Commands**
-
-* `# ls` - list posts from the frontpage
-* `# ls funny top` - lists posts from /r/funny sorted by top rated
-* `# cd ..` - go back to frontpage listings
-* `# view comments 3` - views comments for the specified post index
-* `# view more comments` - load more comments for current post scope
-
-## Commands 
-
-* **list**
-  * Aliases: **ls, cd**
-  * Options:
-    * **[next|previous]** - can only be used on result set
-    * **[subreddit] [new|rising|top|controversial]** - sort applies to subreddits only (not frontpage)
-    * **[subreddit] [next|previous]** - can only be used on result set
-    * **[..|-|~/]** - common directory nav commands - can only be used with the "cd" alias
- * Description: list posts from the the specified subreddit or the front page if no subreddit specified and sorts by optional new, rising, top, controversial. Use the "cd" alias to forwards and backwards with the [..|-|~/] options
-* **list subreddits**
-  * Aliases: **[ls, cd], subs** 
-  * Options:
-    * **[next|previous]** - can only be used on result set
-  * Description: list all public subreddits available on reddit
-* **view content**
-  * Options:
-    * **[index]** - can only be used on result set
-  * Description: opens the permalink of the specified post index in a new window.
-* **view comments**
-  * Options:
-    * **[index] [confidence|top|new|hot|controversial|old|random|qa]** - can only be used on result set
-  * Description: loads the comments of the specified post index.
-* **view more comments**
-  * Options:
-    * **[index] [confidence|top|new|hot|controversial|old|random|qa]** - can only be used on result set
-  * Description: Loads more comments from the post scope if no index is given and there are posts to load, otherwise loads the specified comment tree for the index given.
-* **watch**
-  * Options:
-    * **[subreddit]**
-  * Description: Watches the specified subreddit for new posts
-* **search**
-  * Options:
-    * **[search term]**
-    * **[next|previous]** - can only be used on result set
-  * Description: Searches reddit for the specified search term.
-* **user**
-  * Options:
-    * **[username]**
-    * **[username] [next|previous]** - can only be used on result set
-  * Description: Loads all public comments and posts the specified user has made
-* **login**
-  * Description: redirects your browser to reddit.com and requests permission for reddit shell to load and use user data
-* **upvote**
-  * Options:
-    * **[index]**
-  * Description: Upvotes the specified post or comment index
-* **downvote**
-  * Options:
-    * **[index]**
-  * Description: Downvotes the specified post or comment index
-* **post comment**
-  * Options:
-    * **[text]** - can only be used on view comments result set
-  * Description: Post a comment to the current post in scope
-* **post reply**
-  * Options:
-    * **[index] [text]** - can only be used on view comments or view more comments result set
-  * Description: Post a reply to the specified comment index
-* **logout**
-  * Description: De-authenticates the currently logged in user 
-* **settings**
-  * Aliases: **set**
-  * Options:
-    * **[images] [on|off]**
-      * Aliases: **img**
-    * **[limit] [auto|1-100]**
-  * Description: Changes settings for user preference. Turning images on will show the thumbnail for all image posts. Limit decides how many results to return for posts and comments. "auto" picks the best limit for your screen resolution without having to scroll (unless viewing a nested comment tree)
-* **pwd**
-  * Description: Prints working directory
-* **clear**
-  * Description: Clears the screen
-* **about**
-  * Description: Displays project info and credits
-* **help**
-  * Aliases: **cat readme**
-  * Description: Displays more detailed instructions
+- Browse subreddits, posts, comments, and users
+- Nested comment trees with pagination
+- Watch subreddits for new posts (live stream)
+- Tab autocomplete for commands, subreddit names, and usernames
+- Search posts and comments
+- OAuth 2 login
+- Upvote/downvote and comment/reply
 
 **Libraries**
 
 - [jQuery](https://jquery.com/)
+- [jQuery Terminal](http://terminal.jcubic.pl/)
 - [Showdown](https://github.com/showdownjs/showdown)
-- [JQuery Terminal](http://terminal.jcubic.pl/)
 - [Moment.js](http://momentjs.com/)
+
+---
+
+## CLI libraries
+
+- [chalk](https://github.com/chalk/chalk)
+- [marked](https://marked.js.org/) + [marked-terminal](https://github.com/mikaelbr/marked-terminal)
+- [open](https://github.com/sindresorhus/open)
