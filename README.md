@@ -37,9 +37,9 @@ rshell
 
 Reddit requires OAuth even for reading public content. Before browsing, run `login`:
 
-1. Go to [reddit.com/prefs/apps](https://www.reddit.com/prefs/apps)
+1. Go to [developers.reddit.com/app-registration](https://developers.reddit.com/app-registration)
 2. Accept the [Responsible Builder Policy](https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy)
-3. Click **create app** → choose **installed app**
+3. Create an app → choose **installed app** type
 4. Set redirect URI to `http://localhost:7474/callback`
 5. Copy the client ID (short string shown under the app name)
 6. In rshell, type `login` and paste your client ID when prompted

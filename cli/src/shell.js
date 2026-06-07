@@ -505,8 +505,8 @@ async function cmdLogin() {
 
   if (!clientId) {
     print(chalk.bold('\nTo use authenticated features you need a Reddit app client ID.'))
-    print('1. Go to ' + chalk.underline('https://www.reddit.com/prefs/apps'))
-    print('2. Click "create app" → choose "installed app"')
+    print('1. Go to ' + chalk.underline('https://developers.reddit.com/app-registration'))
+    print('2. Create an app → choose "installed app" type')
     print('3. Set redirect URI to: ' + chalk.yellow('http://localhost:7474/callback'))
     print('4. Copy the client ID (string under the app name)\n')
 
