@@ -1,10 +1,10 @@
-# reddit shell
+# rshell
 
-reddit shell lets you browse and interact with Reddit via a command-line interface.
+rshell lets you browse and interact with Reddit via a command-line interface.
 
 Available in two flavors:
 
-- **Web app** — browser-based terminal emulator at https://redditshell.com/
+- **Web app** — browser-based terminal emulator
 - **CLI** — native Node.js terminal app (run locally, no browser needed)
 
 ---
